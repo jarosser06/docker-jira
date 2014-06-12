@@ -10,8 +10,11 @@ RUN apt-get update && apt-get install -y curl
 RUN curl -Lks ${atlassian_url}/atlassian-jira-${jira_version}.tar.gz -o /tmp/jira.tar.gz
 RUN /usr/sbin/useradd --create-home --home-dir /usr/local/jira --shell /bin/bash jira
 RUN mkdir -p /opt/jira
-RUN tar -zxf /tmp/jira.tar.gz --strip=1 -C /opt/jira
 RUN mkdir -p /opt/jira-home
+RUN chown -R jira:jira /opt/jira
+RUN chown -R jira:jira /opt/jira-home
+USER jira
+RUN tar -zxf /tmp/jira.tar.gz --strip=1 -C /opt/jira
 RUN echo "jira.home = /opt/jira-home" > /opt/jira/atlassian-jira/WEB-INF/classes/jira-application.properties
 
 WORKDIR /opt/jira-home
